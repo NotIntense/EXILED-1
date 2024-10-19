@@ -155,6 +155,13 @@ namespace Exiled.Events.Patches.Events.Player
                 newInstructions.Count - 1,
                 new[]
                 {
+                    // if (this.Hub == ReferenceHub.HostHub)
+                    // goto return
+                    new CodeInstruction(OpCodes.Ldarg_0),
+                    new(OpCodes.Call, PropertyGetter(typeof(PlayerRoleManager), nameof(PlayerRoleManager.Hub))),
+                    new(OpCodes.Callvirt, PropertyGetter(typeof(ReferenceHub), nameof(ReferenceHub.HostHub))),
+                    new(OpCodes.Beq_S, returnLabel),
+
                     // player
                     new CodeInstruction(OpCodes.Ldloc_S, player.LocalIndex),
 
